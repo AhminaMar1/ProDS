@@ -1,0 +1,28 @@
+{
+  "name": "prods",
+  "version": "1.0.0",
+  "description": "ProDS stands for: Proxy deployment swaper system, is a flexible proxy deployment swaper (Exchange) system that allows you to seamlessly swap deployed files with your locally built files in any environment.",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js",
+    "setConfig": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AhminaMar1/ProDS.git"
+  },
+  "keywords": [
+    "ProDS",
+    "Proxy for deployment",
+    "Mock deploy"
+  ],
+  "author": {
+    "name": "AHMINA Marouan",
+    "email": "AhminaMar1@gmail.com"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AhminaMar1/ProDS/issues"
+  },
+  "homepage": "https://github.com/AhminaMar1/ProDS#readme"
+}
