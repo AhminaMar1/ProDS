@@ -3,8 +3,12 @@
   "version": "1.0.0",
   "description": "ProDS stands for: Proxy deployment swaper system, is a flexible proxy deployment swaper (Exchange) system that allows you to seamlessly swap deployed files with your locally built files in any environment.",
   "main": "main.js",
+  "type": "module",
+  "exports": {
+    "./src/*": "./src/*"
+  },
   "scripts": {
-    "start": "node main.js",
+    "start": "node --experimental-specifier-resolution=node main.js",
     "setConfig": ""
   },
   "repository": {
@@ -26,6 +30,8 @@
   },
   "homepage": "https://github.com/AhminaMar1/ProDS#readme",
   "dependencies": {
+    "@babel/plugin-transform-modules-commonjs": "^7.24.8",
+    "@babel/preset-env": "^7.25.4",
     "body-parser": "^1.20.2",
     "chalk": "^5.3.0",
     "express": "^4.19.2",
