@@ -7,3 +7,4 @@ import { startFileServer } from './src/fileServer';
 
 // start the file server
 startFileServer({ resourcesPath, fileServerPort });
+startProxy({ proxyServerPort });
