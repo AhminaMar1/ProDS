@@ -1,1 +1,1 @@
-export { default as startProxy } from './proxyServer.js';
+export {default as startProxy} from './proxyServer.js';
