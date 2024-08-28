@@ -1,1 +1,1 @@
-export { default as startFileServer } from './fileServer';
+export { default as startFileServer } from './fileServer.js';

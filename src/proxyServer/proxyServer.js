@@ -1,4 +1,5 @@
 import express from "express";
+import bodyParser from "body-parser";
 
 const app = express();
 app.use(bodyParser.raw());
@@ -9,7 +10,9 @@ const startProxy = ({ proxyServerPort }) => {
         const { baseUrl } = req;
         res.send({ baseUrl });
     });
-    app.listen(proxyServerPort);
+    app.listen(proxyServerPort, () => {
+        console.log("Proxy started at http://127.0.0.1:" + proxyServerPort);
+    });
 }
 
 export default startProxy;
