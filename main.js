@@ -6,8 +6,8 @@ import {startProxy} from './src/proxyServer/index.js';
 
 // start the file server
 const fileServerConfigs = {
-  PORT: fileServerPort,
-  FILES_DIR: resourcesPath,
+	PORT: fileServerPort,
+	FILES_DIR: resourcesPath,
 };
 
 startFileServer(fileServerConfigs);
