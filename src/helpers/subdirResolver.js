@@ -6,7 +6,7 @@ const removeChunkhash = (file, tokenSubdir) => {
 
 	const fileWithoutExt = arr.join('-');
 	const fileWithoutChunkHashArr = fileWithoutExt.split('-');
-	fileWithoutChunkHashArr.pop(); // popin latest => can be the full chunkhash
+	if (fileWithoutChunkHashArr.length > 1) fileWithoutChunkHashArr.pop(); // popin latest => can be the full chunkhash
 
 	if (fileWithoutChunkHashArr.includes(EXCLUDE_LEGACY) || EXCLUDED_EXT.has(ext))
 		return false;
@@ -14,12 +14,11 @@ const removeChunkhash = (file, tokenSubdir) => {
 };
 
 const getLastTwoSubdir = (path) => {
-    const len = path.length;
+	const len = path.length;
 	let i = path.length,
 		slashCount = 0;
 	while (i > 0 && slashCount < 2) {
-	    console.log(i, slashCount, path.charAt(i));
-	    if (path.charAt(--i) === '/') slashCount++;
+		if (path.charAt(--i) === '/') slashCount++;
 	}
 
 	return path.substr(-(len - i));
