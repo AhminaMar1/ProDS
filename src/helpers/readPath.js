@@ -27,7 +27,7 @@ const readOneDir = async (allFiles, hashSet, path) => {
 						console.log(chalk.red('Error file duplicated', key, path));
 					}
 					hashSet.add(key);
-					allFiles[key] = file;
+					allFiles[key] = lastTwoPath+file;
 				}
 			});
 
