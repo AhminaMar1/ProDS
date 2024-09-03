@@ -34,9 +34,9 @@ const resolveSlashs = (left, right) => {
 	if (lastL === '/' || firstR === '/') return left + right + end;
 
 	return left + '/' + right + end;
-}
+};
 
 const resolveDir = (rootPath, path) => resolveSlashs(rootPath, path);
-const initDirResolver = rootPath => (path) => resolveDir(rootPath, path);
+const initDirResolver = (rootPath) => (path) => resolveDir(rootPath, path);
 
 export {removeChunkhash, getLastTwoSubdir, initDirResolver};
