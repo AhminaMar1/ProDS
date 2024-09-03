@@ -1,6 +1,6 @@
 import fs from 'fs';
 import chalk from 'chalk';
-import {getLastTwoSubdir, removeChunkhash} from './subdirResolver.js';
+import {initDirResolver, getLastTwoSubdir, removeChunkhash} from './subdirResolver.js';
 
 function readdirAsync(path) {
 	return new Promise(function (resolve, reject) {
@@ -27,7 +27,7 @@ const readOneDir = async (allFiles, hashSet, path) => {
 						console.log(chalk.red('Error file duplicated', key, path));
 					}
 					hashSet.add(key);
-					allFiles[key] = lastTwoPath+file;
+					allFiles[key] = lastTwoPath + file;
 				}
 			});
 
@@ -42,15 +42,17 @@ const readOneDir = async (allFiles, hashSet, path) => {
 		});
 };
 
-const readAndHash = async (allFiles, hashSet, flowsEnabled) => {
+const readAndHash = async (allFiles, hashSet, ROOT_PATH, flowsEnabled) => {
+	const getDir = initDirResolver(ROOT_PATH);
+
 	for (let i = 0; i < flowsEnabled.length; i++) {
-		await readOneDir(allFiles, hashSet, flowsEnabled[i]);
+		await readOneDir(allFiles, hashSet, getDir(flowsEnabled[i]));
 	}
 };
 
-const initHash = (allFiles, hashSet) => {
+const initHash = (allFiles, hashSet, ROOT_PATH) => {
 	return async (flowsEnabled) => {
-		await readAndHash(allFiles, hashSet, flowsEnabled);
+		await readAndHash(allFiles, hashSet, ROOT_PATH, flowsEnabled);
 	};
 };
 

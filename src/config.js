@@ -10,5 +10,6 @@ export const proxyServerPort = 1314;
 export const ROOT_PATH = './resourcesExample';
 
 //
+export const INCLUDED_EXT = new Set(['js']);
 export const EXCLUDED_EXT = new Set(['svg', 'png']);
 export const EXCLUDE_LEGACY = 'legacy';
