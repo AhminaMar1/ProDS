@@ -1,8 +1,9 @@
 import fs from 'fs';
 import chalk from 'chalk';
 import {initDirResolver, getLastTwoSubdir, removeChunkhash} from './subdirResolver.js';
+import {INCLUDED_EXT, ROOT_PATH_LEN} from '../config.js';
 
-function readdirAsync(path) {
+const readdirAsync = (path) => {
 	return new Promise(function (resolve, reject) {
 		fs.readdir(path, function (error, result) {
 			if (error) {
@@ -12,22 +13,30 @@ function readdirAsync(path) {
 			}
 		});
 	});
-}
+};
+
+const getDir = (path) => path.substr(ROOT_PATH_LEN);
+
+const getExt = (file) => file.split('.')?.pop();
 
 const readOneDir = async (allFiles, hashSet, path) => {
 	await readdirAsync(path)
 		.then((files) => {
 			let duplicated = 0;
 			const lastTwoPath = getLastTwoSubdir(path);
+			const dir = getDir(path);
+
 			files.forEach((file) => {
 				const key = removeChunkhash(file, lastTwoPath);
-				if (key) {
+				const ext = getExt(file);
+
+				if (key && INCLUDED_EXT.has(ext)) {
 					if (hashSet.has(key)) {
 						duplicated++;
 						console.log(chalk.red('Error file duplicated', key, path));
 					}
+					allFiles[key] = dir + file;
 					hashSet.add(key);
-					allFiles[key] = lastTwoPath + file;
 				}
 			});
 
