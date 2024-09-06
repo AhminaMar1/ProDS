@@ -1,8 +1,8 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import chalk from 'chalk';
-import {getLastTwoSubdir, removeChunkhash} from '../helpers/subdirResolver.js';
-import {URL_FILES_SERVER, INCLUDED_EXT} from '../config.js';
+import {hashFn} from '../helpers/hashFn.js';
+import {URL_FILES_SERVER} from '../config.js';
 
 const app = express();
 app.use(bodyParser.raw());
@@ -11,17 +11,14 @@ app.use(bodyParser.raw());
 const startProxy = ({PROT, hashObj, hashSet}) => {
 	app.use('*', function (req, res) {
 		const {baseUrl} = req;
-		const ext = baseUrl && baseUrl.split('.').pop();
-		if (INCLUDED_EXT.has(ext)) {
-			const pathArrs = baseUrl.split('/');
-			const fileName = pathArrs.pop();
-			const lastTwoPath = getLastTwoSubdir(pathArrs.join('/') + '/');
-			const keyFileName = removeChunkhash(fileName, lastTwoPath);
+		const keyFileName = hashFn(baseUrl);
+		if (keyFileName) {
 			if (hashSet.has(keyFileName)) {
 				const redirectTo = URL_FILES_SERVER + hashObj[keyFileName];
 				console.log(chalk.gray('Founded file', baseUrl));
 				res.redirect(redirectTo);
 			} else {
+				// todo: load the file and serve it.
 				console.log(chalk.red('File not founded', keyFileName));
 			}
 		} else {
