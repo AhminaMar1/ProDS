@@ -3,11 +3,14 @@ import {removeChunkhash, getLastTwoSubdir} from './subdirResolver.js';
 
 const hashFn = (url) => {
 	// check if the url is valid
-	const ext = url.split('.').pop();
+	const splitQP = url?.split('?');
+	const splitAnchor = splitQP[0]?.split('#');
+	const pureURL = splitAnchor[0];
+	const ext = pureURL.split('.').pop();
 	if (!INCLUDED_EXT.has(ext)) return null;
 
 	//Start hashFn
-	const arr = url.split('/');
+	const arr = pureURL.split('/');
 	const fileName = arr.pop();
 
 	const tokenSubdir = getLastTwoSubdir(arr.join('/')+'/');
