@@ -1,3 +1,7 @@
+//base_url
+
+export const base_domain_url = 'https://example.com';
+
 // files
 
 export const DEEP_PATH_INTO_CONSIDERATION = 2;
@@ -17,3 +21,4 @@ export const ROOT_PATH_LEN =
 export const INCLUDED_EXT = new Set(['js', 'html']);
 export const EXCLUDED_EXT = new Set(['svg', 'png']);
 export const EXCLUDE_LEGACY = 'legacy';
+export const EXCLUDE_WITH_NO_PRODS = '#withnoprods';
