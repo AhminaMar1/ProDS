@@ -13,12 +13,12 @@ export const proxyServerPort = 1314;
 //
 export const URL_FILES_SERVER = 'http://127.0.0.1:' + fileServerPort;
 // resources path that will be servert by the fileServer.
-export const ROOT_PATH = './resourcesExample';
+export const ROOT_PATH = './resources';
 
 export const ROOT_PATH_LEN =
 	ROOT_PATH.charAt(0) === '.' ? ROOT_PATH.length : ROOT_PATH.length + 2;
 //
-export const INCLUDED_EXT = new Set(['js', 'html']);
+export const INCLUDED_EXT = new Set(['js', 'css', 'html']);
 export const EXCLUDED_EXT = new Set(['svg', 'png']);
 export const EXCLUDE_LEGACY = 'legacy';
 export const EXCLUDE_WITH_NO_PRODS = '#withnoprods';
