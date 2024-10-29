@@ -5,6 +5,7 @@ import chalk from 'chalk';
 import {URL_FILES_SERVER, EXCLUDE_WITH_NO_PRODS} from '../config.js';
 import {hashFn} from '../helpers/hashFn.js';
 import {fullUrl} from '../helpers/urlResolver.js';
+import {trieMatch} from '../helpers/proDStrie.js';
 
 const app = express();
 app.use(bodyParser.raw());
@@ -20,12 +21,30 @@ const startProxy = ({PROT, hashObj, hashSet}) => {
 				console.log(chalk.green('Founded file', baseUrl));
 				res.redirect(redirectTo);
 			} else {
-				const url = fullUrl(baseUrl);
-				console.log(chalk.gray('file note founded, however redirecting into: ', url));
-				res.redirect(url);
+				const tryTrie = trieMatch(baseUrl);
+				if (tryTrie && (tryTrie.success || tryTrie.resolve)) {
+					const file = tryTrie.res;
+					if (tryTrie.success) {
+						console.log(chalk.green('Founded file', file));
+					} else {
+						console.log(chalk.yellow('Founded file', file));
+					}
+					const redirectTo = URL_FILES_SERVER + file;
+					res.redirect(redirectTo);
+				} else {
+					const url = fullUrl(baseUrl);
+					console.log(chalk.gray('file note founded, however redirecting into: ', url));
+					res.redirect(url);
+				}
 			}
 		} else {
-			console.log(chalk.red('The url that contain ', EXCLUDE_WITH_NO_PRODS, ' not has to redirect to the ProDS solution'));
+			console.log(
+				chalk.red(
+					'The url that contain ',
+					EXCLUDE_WITH_NO_PRODS,
+					' not has to redirect to the ProDS solution',
+				),
+			);
 		}
 	});
 

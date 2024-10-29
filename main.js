@@ -23,6 +23,5 @@ const hashSet = new Set();
 	};
 
 	startFileServer(fileServerConfigs);
-	//TODO: send the allFiles Hashes and hasSet to start proxy
 	startProxy({PROT: proxyServerPort, hashObj, hashSet});
 })();
