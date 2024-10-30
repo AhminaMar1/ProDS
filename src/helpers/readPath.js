@@ -2,6 +2,7 @@ import fs from 'fs';
 import chalk from 'chalk';
 import {initDirResolver, getLastTwoSubdir, removeChunkhash} from './subdirResolver.js';
 import {INCLUDED_EXT, ROOT_PATH_LEN} from '../config.js';
+import {addToTrie} from './proDStrie.js';
 
 const readdirAsync = (path) => {
 	return new Promise(function (resolve, reject) {
@@ -29,6 +30,8 @@ const readOneDir = async (allFiles, hashSet, path) => {
 			files.forEach((file) => {
 				const key = removeChunkhash(file, lastTwoPath);
 				const ext = getExt(file);
+				const fileWithHash = lastTwoPath + file;
+				addToTrie(fileWithHash);
 
 				if (key && INCLUDED_EXT.has(ext)) {
 					if (hashSet.has(key)) {

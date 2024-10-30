@@ -1,4 +1,9 @@
-import {EXCLUDED_EXT, EXCLUDE_LEGACY, DEEP_PATH_INTO_CONSIDERATION} from '../config.js';
+import {
+	EXCLUDED_EXT,
+	INCLUDED_EXT,
+	EXCLUDE_LEGACY,
+	DEEP_PATH_INTO_CONSIDERATION,
+} from '../config.js';
 
 const removeChunkhash = (file, tokenSubdir) => {
 	const arr = file.split('.');
@@ -24,7 +29,6 @@ const getLastTwoSubdir = (path) => {
 	return path.substr(-(len - i));
 };
 
-// Todo: Has to add slashes in the first and end of the str if they don't exist
 const resolveSlashs = (left, right) => {
 	const lastL = left.charAt(left.length - 1),
 		firstR = right.charAt(0),
@@ -39,4 +43,20 @@ const resolveSlashs = (left, right) => {
 const resolveDir = (rootPath, path) => resolveSlashs(rootPath, path);
 const initDirResolver = (rootPath) => (path) => resolveDir(rootPath, path);
 
-export {removeChunkhash, getLastTwoSubdir, initDirResolver};
+const getrurl = (url) => {
+	const splitQP = url?.split('?');
+	const splitAnchor = splitQP[0]?.split('#');
+	const pureURL = splitAnchor[0];
+	const ext = pureURL.split('.').pop();
+	if (!INCLUDED_EXT.has(ext)) return null;
+
+	//Start hashFn
+	const arr = pureURL.split('/');
+	const fileName = arr.pop();
+
+	const tokenSubdir = getLastTwoSubdir(arr.join('/') + '/');
+
+	return [fileName, tokenSubdir];
+};
+
+export {removeChunkhash, getLastTwoSubdir, initDirResolver, getrurl};
