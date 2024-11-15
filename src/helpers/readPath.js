@@ -1,8 +1,8 @@
 import fs from 'fs';
 import chalk from 'chalk';
 import {initDirResolver, getLastTwoSubdir, removeChunkhash} from './subdirResolver.js';
-import {INCLUDED_EXT, ROOT_PATH_LEN} from '../config.js';
-import {addToTrie} from './proDStrie.js';
+import {INCLUDED_EXT, ROOT_PATH_LEN} from '../../config.js';
+import {addToTrie} from './proDSTrie.js';
 
 const readdirAsync = (path) => {
 	return new Promise(function (resolve, reject) {

@@ -3,3 +3,6 @@
 /dist
 /.pnp
 .pnp.js
+/resources/*
+!/resources/app01
+!/resources/app02
