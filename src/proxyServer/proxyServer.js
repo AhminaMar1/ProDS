@@ -2,10 +2,10 @@ import http from 'http';
 import express from 'express';
 import bodyParser from 'body-parser';
 import chalk from 'chalk';
-import {URL_FILES_SERVER, EXCLUDE_WITH_NO_PRODS} from '../config.js';
+import {URL_FILES_SERVER, EXCLUDE_WITH_NO_PRODS} from '../../config.js';
 import {hashFn} from '../helpers/hashFn.js';
-import {fullUrl} from '../helpers/urlResolver.js';
-import {trieMatch} from '../helpers/proDStrie.js';
+import {excludedfullUrl} from '../helpers/urlResolver.js';
+import {trieMatch, resolve_url} from '../helpers/proDSTrie.js';
 
 const app = express();
 app.use(bodyParser.raw());
@@ -14,26 +14,31 @@ http.globalAgent.keepAlive = true;
 const startProxy = ({PROT, hashObj, hashSet}) => {
 	app.use('*', async function (req, res) {
 		const {baseUrl} = req;
+		console.log(chalk.blue('in: ', baseUrl));
 		if (!baseUrl.includes(EXCLUDE_WITH_NO_PRODS)) {
 			const keyFileName = hashFn(baseUrl);
 			if (keyFileName && hashSet.has(keyFileName)) {
 				const redirectTo = URL_FILES_SERVER + hashObj[keyFileName];
-				console.log(chalk.green('Founded file', baseUrl));
+				console.log(chalk.green('Founded file', hashObj[keyFileName]));
+				console.log('redirectTo:', chalk.bgGreen(redirectTo));
 				res.redirect(redirectTo);
 			} else {
 				const tryTrie = trieMatch(baseUrl);
 				if (tryTrie && (tryTrie.success || tryTrie.resolve)) {
-					const file = tryTrie.res;
+					const rFile = tryTrie.res;
+					const rUrl = resolve_url(baseUrl, rFile);
 					if (tryTrie.success) {
-						console.log(chalk.green('Founded file', file));
+						console.log(chalk.green('Founded file', rUrl));
 					} else {
-						console.log(chalk.yellow('Founded file', file));
+						console.log(chalk.yellow('Founded file', rUrl));
 					}
-					const redirectTo = URL_FILES_SERVER + file;
+					const redirectTo = URL_FILES_SERVER + rUrl;
+					console.log('redirectTo:', chalk.bgGreen(redirectTo));
 					res.redirect(redirectTo);
 				} else {
-					const url = fullUrl(baseUrl);
+					const url = excludedfullUrl(baseUrl);
 					console.log(chalk.gray('file note founded, however redirecting into: ', url));
+					console.log('redirectTo:', chalk.bgGreen(url));
 					res.redirect(url);
 				}
 			}
@@ -49,7 +54,7 @@ const startProxy = ({PROT, hashObj, hashSet}) => {
 	});
 
 	app.listen(PROT, () => {
-		console.log('Proxy started at http://127.0.0.1:' + PROT);
+		console.log(`Proxy started at ${LOCALHOST}:${PORT}`);
 	});
 };
 

@@ -1,9 +1,10 @@
 import {
 	EXCLUDED_EXT,
 	INCLUDED_EXT,
-	EXCLUDE_LEGACY,
+	HAS_TO_EXCLUDE_LEGACY,
+	LEGACY_TOKEN_NAME,
 	DEEP_PATH_INTO_CONSIDERATION,
-} from '../config.js';
+} from '../../config.js';
 
 const removeChunkhash = (file, tokenSubdir) => {
 	const arr = file.split('.');
@@ -13,7 +14,10 @@ const removeChunkhash = (file, tokenSubdir) => {
 	const fileWithoutChunkHashArr = fileWithoutExt.split('-');
 	if (fileWithoutChunkHashArr.length > 1) fileWithoutChunkHashArr.pop(); // popin latest => can be the full chunkhash
 
-	if (fileWithoutChunkHashArr.includes(EXCLUDE_LEGACY) || EXCLUDED_EXT.has(ext))
+	if (
+		(HAS_TO_EXCLUDE_LEGACY && fileWithoutChunkHashArr.includes(LEGACY_TOKEN_NAME)) ||
+		EXCLUDED_EXT.has(ext)
+	)
 		return false;
 	return tokenSubdir + fileWithoutChunkHashArr.join('-') + '.' + ext;
 };

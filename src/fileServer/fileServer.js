@@ -1,4 +1,5 @@
 import httpServer from 'http-server';
+import {LOCALHOST} from '../../config';
 import path from 'path';
 
 const startFileServer = ({FILES_DIR, PORT}) => {
@@ -9,7 +10,7 @@ const startFileServer = ({FILES_DIR, PORT}) => {
 
 	const server = httpServer.createServer(options);
 	server.listen(PORT, '0.0.0.0', function () {
-		console.log('Server started at http://127.0.0.1:' + PORT);
+		console.log(`Server started at ${LOCALHOST}:${PORT}`);
 	});
 };
 

@@ -1,3 +1,4 @@
-import {base_domain_url, EXCLUDE_WITH_NO_PRODS} from '../config.js';
+import {BASE_DOMAIN_URL, EXCLUDE_WITH_NO_PRODS} from '../../config.js';
 
-export const fullUrl = (baseUrl) => base_domain_url + baseUrl + EXCLUDE_WITH_NO_PRODS;
+export const excludedfullUrl = (baseUrl) =>
+	BASE_DOMAIN_URL + baseUrl + EXCLUDE_WITH_NO_PRODS;
