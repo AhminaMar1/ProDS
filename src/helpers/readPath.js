@@ -1,7 +1,13 @@
 import fs from 'fs';
 import chalk from 'chalk';
-import {initDirResolver, getLastTwoSubdir, removeChunkhash} from './subdirResolver.js';
-import {INCLUDED_EXT, ROOT_PATH_LEN} from '../../config.js';
+import {initDirResolver, getLastNSubdir, removeChunkhash} from './subdirResolver.js';
+import {
+	INCLUDED_EXT,
+	ROOT_PATH_LEN,
+	HAS_TO_EXCLUDE_LEGACY,
+	EXCLUDED_EXT,
+	LEGACY_TOKEN_NAME,
+} from '../../config.js';
 import {addToTrie} from './proDSTrie.js';
 
 const readdirAsync = (path) => {
@@ -24,14 +30,20 @@ const readOneDir = async (allFiles, hashSet, path) => {
 	await readdirAsync(path)
 		.then((files) => {
 			let duplicated = 0;
-			const lastTwoPath = getLastTwoSubdir(path);
+			const lastTwoPath = getLastNSubdir(path);
 			const dir = getDir(path);
 
 			files.forEach((file) => {
 				const key = removeChunkhash(file, lastTwoPath);
 				const ext = getExt(file);
 				const fileWithHash = lastTwoPath + file;
-				addToTrie(fileWithHash);
+				if (
+					(HAS_TO_EXCLUDE_LEGACY && fileWithHash.includes(LEGACY_TOKEN_NAME)) ||
+					EXCLUDED_EXT.has(ext)
+				) {
+				} else if (INCLUDED_EXT.has(ext)) {
+					addToTrie(fileWithHash);
+				}
 
 				if (key && INCLUDED_EXT.has(ext)) {
 					if (hashSet.has(key)) {

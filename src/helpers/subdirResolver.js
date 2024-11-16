@@ -22,7 +22,7 @@ const removeChunkhash = (file, tokenSubdir) => {
 	return tokenSubdir + fileWithoutChunkHashArr.join('-') + '.' + ext;
 };
 
-const getLastTwoSubdir = (path) => {
+const getLastNSubdir = (path) => {
 	const len = path.length;
 	let i = path.length,
 		slashCount = 0;
@@ -58,9 +58,9 @@ const getrurl = (url) => {
 	const arr = pureURL.split('/');
 	const fileName = arr.pop();
 
-	const tokenSubdir = getLastTwoSubdir(arr.join('/') + '/');
+	const tokenSubdir = getLastNSubdir(arr.join('/') + '/');
 
 	return [fileName, tokenSubdir];
 };
 
-export {removeChunkhash, getLastTwoSubdir, initDirResolver, getrurl};
+export {removeChunkhash, getLastNSubdir, initDirResolver, getrurl};

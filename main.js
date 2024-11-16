@@ -26,5 +26,5 @@ const hashSet = new Set();
 	};
 
 	startFileServer(fileServerConfigs);
-	startProxy({PROT: PROXY_SERVER_PORT, hashObj, hashSet});
+	startProxy({PORT: PROXY_SERVER_PORT, hashObj, hashSet});
 })();
