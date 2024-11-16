@@ -1,5 +1,5 @@
 import httpServer from 'http-server';
-import {LOCALHOST} from '../../config';
+import {LOCALHOST} from '../../config.js';
 import path from 'path';
 
 const startFileServer = ({FILES_DIR, PORT}) => {

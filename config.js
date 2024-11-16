@@ -14,7 +14,7 @@ export const PROXY_SERVER_PORT = 1314;
 
 //URLs
 export const LOCALHOST = 'http://127.0.0.1';
-export const URL_FILES_SERVER = URL_FILES_SERVER + ':' + FILES_SERVER_PORT;
+export const URL_FILES_SERVER = LOCALHOST + ':' + FILES_SERVER_PORT;
 
 // resources path that will be servert by the fileServer.
 export const ROOT_PATH = './resources';
@@ -25,6 +25,6 @@ export const ROOT_PATH_LEN =
 //
 export const INCLUDED_EXT = new Set(['js', 'css']);
 export const EXCLUDED_EXT = new Set(['svg', 'png']);
-export const HAS_TO_EXCLUDE_LEGACY = false;
+export const HAS_TO_EXCLUDE_LEGACY = true;
 export const LEGACY_TOKEN_NAME = 'legacy';
 export const EXCLUDE_WITH_NO_PRODS = '#withnoprods';
