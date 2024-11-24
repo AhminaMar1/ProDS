@@ -3,7 +3,7 @@ import {
 	INCLUDED_EXT,
 	HAS_TO_EXCLUDE_LEGACY,
 	LEGACY_TOKEN_NAME,
-	DEEP_PATH_INTO_CONSIDERATION,
+	ROOT_PATH,
 } from '../../config.js';
 
 const removeChunkhash = (file, tokenSubdir) => {
@@ -24,13 +24,7 @@ const removeChunkhash = (file, tokenSubdir) => {
 
 const getLastNSubdir = (path) => {
 	const len = path.length;
-	let i = path.length,
-		slashCount = 0;
-	while (i > 0 && slashCount < DEEP_PATH_INTO_CONSIDERATION) {
-		if (path.charAt(--i) === '/') slashCount++;
-	}
-
-	return path.substr(-(len - i));
+	return path.substr(-(len - ROOT_PATH.length));
 };
 
 const resolveSlashs = (left, right) => {
@@ -57,8 +51,7 @@ const getrurl = (url) => {
 	//Start hashFn
 	const arr = pureURL.split('/');
 	const fileName = arr.pop();
-
-	const tokenSubdir = getLastNSubdir(arr.join('/') + '/');
+	const tokenSubdir = arr.join('/') + '/';
 
 	return [fileName, tokenSubdir];
 };
