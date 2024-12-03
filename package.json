@@ -8,7 +8,7 @@
 		"./src/*": "./src/*"
 	},
 	"scripts": {
-		"start": "node main.js",
+		"start": "npx nodemon main.js",
 		"build": "babel main.js -d dist",
 		"format": "prettier --write .",
 		"lint": "eslint .",
@@ -41,6 +41,7 @@
 		"express": "^4.19.2",
 		"fs": "^0.0.1-security",
 		"http-server": "^14.1.1",
+		"nodemon": "^3.1.7",
 		"path": "^0.12.7"
 	},
 	"devDependencies": {

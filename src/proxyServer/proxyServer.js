@@ -16,7 +16,7 @@ import {splitNameDirFile} from '../helpers/splitNameDirFile.js';
 const app = express();
 app.use(bodyParser.raw());
 http.globalAgent.keepAlive = true;
-// In fact, instead of getting the file and providing it as a proxy, we will just redirect the request to the existing files. however for the files that do not exist => we will load them and then send them in the response as a real proxy.
+
 const startProxy = ({PORT, hashObj, hashSet}) => {
 	app.use('*', async function (req, res) {
 		const {baseUrl} = req;
