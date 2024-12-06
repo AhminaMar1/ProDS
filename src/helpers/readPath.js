@@ -7,8 +7,10 @@ import {
 	HAS_TO_EXCLUDE_LEGACY,
 	EXCLUDED_EXT,
 	LEGACY_TOKEN_NAME,
+	ROOT_PATH,
 } from '../../config.js';
 import {addToTrie} from './proDSTrie.js';
+import {readQueue} from './readStack.js';
 
 const readedDirSet = new Set();
 
@@ -51,8 +53,10 @@ const readOneDir = async (hashObj, hashSet, path) => {
 				if (isADir) {
 					if (!readedDirSet.has(newDir)) {
 						readedDirSet.add(newDir);
-						//Todo: has to add readStack => wait for it
-						await readOneDir(hashObj, hashSet, newDir + '/');
+						const len = newDir.length;
+						const dirToAddToQueue = newDir.substr(-(len - ROOT_PATH.length)) + '/';
+						console.log(chalk.green('+added new path to be read', dirToAddToQueue));
+						readQueue.enqueue(dirToAddToQueue);
 					}
 				} else {
 					const key = removeChunkhash(file, lastTwoPath);
@@ -79,26 +83,21 @@ const readOneDir = async (hashObj, hashSet, path) => {
 
 			if (duplicated)
 				console.error(chalk.red('Duplication issue: ' + duplicated + ' files'));
-			console.log(
-				chalk.green('----- Hashing step has been finished for "' + path + '" -----'),
-			);
+			console.log(chalk.green('-Hashing step has been finished for "' + path + '" -----'));
 		})
 		.catch((err) => {
 			console.log(chalk.red('Error when try to read dir', err));
 		});
 };
 
-const readAndHash = async (hashObj, hashSet, ROOT_PATH, flowsEnabled) => {
+const readAndHash = async (hashObj, hashSet, flowToRead) => {
 	const getDir = initDirResolver(ROOT_PATH);
-
-	for (let i = 0; i < flowsEnabled.length; i++) {
-		await readOneDir(hashObj, hashSet, getDir(flowsEnabled[i]));
-	}
+	await readOneDir(hashObj, hashSet, getDir(flowToRead));
 };
 
-const initHash = (hashObj, hashSet, ROOT_PATH) => {
-	return async (flowsEnabled) => {
-		await readAndHash(hashObj, hashSet, ROOT_PATH, flowsEnabled);
+const initHash = async (hashObj, hashSet) => {
+	return async (flowToRead) => {
+		await readAndHash(hashObj, hashSet, flowToRead);
 	};
 };
 
