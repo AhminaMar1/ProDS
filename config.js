@@ -3,7 +3,7 @@
 export const BASE_DOMAIN_URL = 'https://example.com';
 
 // enable flows
-export const ENABLED_FLOWS = ['app01', 'app02'];
+export const FLOWS_TO_READ = ['app01', 'app02'];
 
 // Ports
 export const PROXY_SERVER_PORT = 1313;
