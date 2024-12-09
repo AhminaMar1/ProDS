@@ -12,12 +12,31 @@ import {hashFn} from '../helpers/hashFn.js';
 import {excludedfullUrl} from '../helpers/urlResolver.js';
 import {trieMatch} from '../helpers/proDSTrie.js';
 import {splitNameDirFile} from '../helpers/splitNameDirFile.js';
+import {getAsIsPath} from '../helpers/getAsIsPath.js';
 
 const app = express();
 app.use(bodyParser.raw());
 http.globalAgent.keepAlive = true;
 
+const serveFileHOF = (hashObj) => {
+	return (res, path, hardUrl, isASIS) => {
+		const redirectTo = URL_FILES_SERVER + (hardUrl || hashObj[path]);
+		const fileDirAndName = hardUrl || hashObj[path];
+		if (!hardUrl) {
+			console.log(
+				chalk.green(`Out: ${isASIS ? ' AS IS' : ''} file found, file link:`),
+				chalk.bgGreen(redirectTo),
+			);
+		}
+		const [fileName, fileDir] = splitNameDirFile(fileDirAndName);
+		res.sendFile(fileName, {root: fileDir}, (err) => {
+			if (err) console.log(chalk.red('Error when send file:'), chalk.bgRed(err));
+		});
+	};
+};
+
 const startProxy = ({PORT, hashObj, hashSet}) => {
+	const serveFile = serveFileHOF(hashObj);
 	app.use('*', async function (req, res) {
 		const {baseUrl} = req;
 		const toGetExt = baseUrl.split('.');
@@ -25,20 +44,16 @@ const startProxy = ({PORT, hashObj, hashSet}) => {
 		console.log(chalk.blue('In: ', baseUrl));
 		if (hasIncludedExt) {
 			const keyFileName = hashFn(baseUrl);
-			if (keyFileName && hashSet.has(keyFileName)) {
-				const redirectTo = URL_FILES_SERVER + hashObj[keyFileName];
-				const fileDirAndName = hashObj[keyFileName];
-				console.log(chalk.green('Out: file found, file link:'), chalk.bgGreen(redirectTo));
-				const [fileName, fileDir] = splitNameDirFile(fileDirAndName);
-				res.sendFile(fileName, {root: fileDir}, (err) => {
-					if (err) console.log(chalk.red('Error when send file:'), chalk.bgRed(err));
-				});
+			const asIsPath = getAsIsPath(baseUrl);
+			if (asIsPath && hashSet.has(asIsPath)) {
+				serveFile(res, asIsPath, '', true);
+			} else if (keyFileName && hashSet.has(keyFileName)) {
+				serveFile(res, keyFileName);
 			} else {
 				const tryTrie = trieMatch(baseUrl);
 				if (tryTrie && (tryTrie.success || tryTrie.resolved)) {
 					const rUrl = tryTrie.res;
 					const redirectTo = URL_FILES_SERVER + rUrl;
-					const fileDirAndName = rUrl;
 					if (tryTrie.success) {
 						console.log(
 							chalk.green('Out: file found using trie algo, file link:'),
@@ -50,11 +65,7 @@ const startProxy = ({PORT, hashObj, hashSet}) => {
 							chalk.bgYellow(redirectTo),
 						);
 					}
-					const [fileNameTrie, fileDir] = splitNameDirFile(fileDirAndName);
-
-					res.sendFile(fileNameTrie, {root: fileDir}, (err) => {
-						if (err) console.log(chalk.red('Error when send file:'), chalk.bgRed(err));
-					});
+					serveFile(res, keyFileName, rUrl);
 				} else {
 					const url = excludedfullUrl(baseUrl);
 					console.log(

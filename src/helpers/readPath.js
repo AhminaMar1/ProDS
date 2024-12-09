@@ -11,6 +11,7 @@ import {
 } from '../../config.js';
 import {addToTrie} from './proDSTrie.js';
 import {readQueue} from './readStack.js';
+import {getAsIsPath} from './getAsIsPath.js';
 
 const readedDirSet = new Set();
 
@@ -77,6 +78,9 @@ const readOneDir = async (hashObj, hashSet, path) => {
 						}
 						hashObj[key] = dir + file;
 						hashSet.add(key);
+						const AsIsPath = getAsIsPath(lastTwoPath + file);
+						hashObj[AsIsPath] = dir + file;
+						hashSet.add(AsIsPath);
 					}
 				}
 			});
